@@ -5,7 +5,7 @@ import 'package:server/core/command.dart';
 import 'package:server/models/command_packet.dart';
 
 class AuthHandler extends Command {
-  AuthHandler() : super('auth');
+  AuthHandler() : super("auth");
 
   final validUsers = {
     "test": "test",

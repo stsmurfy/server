@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dotenv/dotenv.dart';
 import 'package:server/core/client.dart';
 import 'package:server/handlers/auth_handler.dart';
+import 'package:server/handlers/block_info_handler.dart';
 import 'package:server/handlers/ping_handler.dart';
 import 'package:server/models/command_packet.dart';
 
@@ -12,6 +13,7 @@ class SocketServer {
   static final handlers = [
     PingHandler(),
     AuthHandler(),
+    BlockInfoHandler(),
   ];
   static final clients = <Client>[];
 
@@ -66,7 +68,7 @@ class SocketServer {
 
                         do {
                           try {
-                            await handler.execute(
+                            await handler.run(
                               client: client,
                               payload: cmd.payload,
                             );

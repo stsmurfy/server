@@ -5,7 +5,7 @@ import 'package:server/core/command.dart';
 import 'package:server/models/command_packet.dart';
 
 class PingHandler extends Command {
-  PingHandler() : super('ping');
+  const PingHandler() : super("ping");
 
   @override
   Future<void> execute({
