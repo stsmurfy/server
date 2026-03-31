@@ -4,12 +4,14 @@ import 'dart:io';
 
 import 'package:dotenv/dotenv.dart';
 import 'package:server/core/client.dart';
+import 'package:server/handlers/auth_handler.dart';
 import 'package:server/handlers/ping_handler.dart';
 import 'package:server/models/command_packet.dart';
 
 class SocketServer {
   static final handlers = [
     PingHandler(),
+    AuthHandler(),
   ];
   static final clients = <Client>[];
 
@@ -45,7 +47,9 @@ class SocketServer {
           if (WebSocketTransformer.isUpgradeRequest(request)) {
             WebSocketTransformer.upgrade(request).then((socket) {
               log('Client connected.');
-              Client client = Client(socket: socket);
+
+              final client = Client(socket: socket);
+
               clients.add(client);
 
               socket.listen(

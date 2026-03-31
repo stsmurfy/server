@@ -20,7 +20,7 @@ class PingHandler extends Command {
         ).toJson(),
       );
     } catch (e) {
-      log('Ping socket error: $e');
+      log('Ping error: $e');
     }
   }
 }

@@ -8,4 +8,5 @@ class Client {
 
   final WebSocket socket;
   String? group;
+  bool isAuthorized = false;
 }
