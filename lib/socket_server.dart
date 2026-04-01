@@ -4,10 +4,11 @@ import 'dart:io';
 
 import 'package:dotenv/dotenv.dart';
 import 'package:server/core/client.dart';
-import 'package:server/handlers/auth_handler.dart';
-import 'package:server/handlers/block_info_handler.dart';
-import 'package:server/handlers/list_handler.dart';
-import 'package:server/handlers/ping_handler.dart';
+import 'package:server/handlers/client/auth_handler.dart';
+import 'package:server/handlers/client/block_info_handler.dart';
+import 'package:server/handlers/client/list_handler.dart';
+import 'package:server/handlers/client/ping_handler.dart';
+import 'package:server/handlers/server/block_info_result_handler.dart';
 import 'package:server/models/command_packet.dart';
 
 /// A WebSocket server for handling client connections and message processing.
@@ -31,6 +32,7 @@ class SocketServer {
     ListHandler(),
     AuthHandler(),
     BlockInfoHandler(),
+    BlockInfoResultHandler(),
   ];
   static final clients = <Client>{};
 

@@ -10,7 +10,14 @@ class AuthHandler extends Command {
   AuthHandler() : super("auth");
 
   final validUsers = {
-    "test": "test",
+    "test": {
+      "password": "test",
+      "group": "client",
+    },
+    "server": {
+      "password": "1234",
+      "group": "server",
+    },
   };
 
   @override
@@ -32,7 +39,8 @@ class AuthHandler extends Command {
       }
 
       // Check if the username and password are valid
-      if (!validUsers.containsKey(payload["username"]) || validUsers[payload["username"]] != payload["password"]) {
+      if (!validUsers.containsKey(payload["username"]) ||
+          validUsers[payload["username"]]!["password"] != payload["password"]) {
         client
           ..send(
             CommandPacket(
@@ -47,6 +55,7 @@ class AuthHandler extends Command {
 
       client
         ..isAuthorized = true
+        ..group = validUsers[payload["username"]]!["group"]
         ..send(
           CommandPacket(
             command: command,

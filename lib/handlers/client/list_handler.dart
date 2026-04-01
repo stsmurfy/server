@@ -28,7 +28,7 @@ class ListHandler extends Command {
         ),
       );
     } catch (e) {
-      log('Ping error: $e');
+      log('List error: $e');
     }
   }
 }
