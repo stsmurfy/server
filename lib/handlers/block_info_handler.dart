@@ -17,13 +17,13 @@ class BlockInfoHandler extends Command {
     dynamic payload,
   }) async {
     try {
-      client.socket.add(
+      client.send(
         CommandPacket(
           command: command,
           payload: {
             "state": "n/a",
           },
-        ).toJson(),
+        ),
       );
     } catch (e) {
       log("BlockInfo error: $e");

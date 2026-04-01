@@ -4,6 +4,8 @@ import 'package:server/core/client.dart';
 import 'package:server/core/command.dart';
 import 'package:server/models/command_packet.dart';
 
+/// The AuthHandler class handles the authentication command.
+/// It checks if the provided username and password are valid and sets the client's authorization status accordingly.
 class AuthHandler extends Command {
   AuthHandler() : super("auth");
 
@@ -19,21 +21,25 @@ class AuthHandler extends Command {
     try {
       // Check if the payload is a map
       if (payload is! Map<String, dynamic>) {
-        client.socket
-          ..add(CommandPacket(
-            command: command,
-            payload: "Invalid payload",
-          ).toJson())
+        client
+          ..send(
+            CommandPacket(
+              command: command,
+              payload: "Invalid payload",
+            ),
+          )
           ..close();
       }
 
       // Check if the username and password are valid
       if (!validUsers.containsKey(payload["username"]) || validUsers[payload["username"]] != payload["password"]) {
-        client.socket
-          ..add(CommandPacket(
-            command: command,
-            payload: "Invalid credentials",
-          ).toJson())
+        client
+          ..send(
+            CommandPacket(
+              command: command,
+              payload: "Invalid credentials",
+            ),
+          )
           ..close();
 
         return;
@@ -41,11 +47,11 @@ class AuthHandler extends Command {
 
       client
         ..isAuthorized = true
-        ..socket.add(
+        ..send(
           CommandPacket(
             command: command,
             payload: "Authorized",
-          ).toJson(),
+          ),
         );
     } catch (e) {
       log('Auth error: $e');
