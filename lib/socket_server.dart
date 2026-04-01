@@ -6,6 +6,7 @@ import 'package:dotenv/dotenv.dart';
 import 'package:server/core/client.dart';
 import 'package:server/handlers/auth_handler.dart';
 import 'package:server/handlers/block_info_handler.dart';
+import 'package:server/handlers/list_handler.dart';
 import 'package:server/handlers/ping_handler.dart';
 import 'package:server/models/command_packet.dart';
 
@@ -27,10 +28,11 @@ import 'package:server/models/command_packet.dart';
 class SocketServer {
   static final handlers = [
     PingHandler(),
+    ListHandler(),
     AuthHandler(),
     BlockInfoHandler(),
   ];
-  static final clients = <Client>[];
+  static final clients = <Client>{};
 
   /// Starts the WebSocket server and listens for incoming connections.
   static start() async {
@@ -114,6 +116,16 @@ class SocketServer {
                 },
                 cancelOnError: false,
               );
+
+              // Acknowledge the client connection with the assigned client ID
+              client.send(
+                CommandPacket(
+                  command: 'ack',
+                  payload: {
+                    'id': client.id,
+                  },
+                ),
+              );
             }).catchError((e) {
               log('WebSocket upgrade failed: $e');
             });
@@ -127,6 +139,19 @@ class SocketServer {
     } catch (e) {
       log('Global exception: $e');
     }
+  }
+
+  /// Sends a message to a specific client by ID with error handling.
+  /// Parameters:
+  /// - `id`: The unique identifier of the target client.
+  /// - `data`: The command packet to send to the client.
+  /// Handles errors during the send operation and logs them without throwing exceptions to the caller.
+  /// Example usage:
+  /// ```dart
+  /// SocketServer.sendTo(clientId, CommandPacket(command: 'update', payload: {'status': 'ok'}));
+  /// ```
+  static sendTo(String id, CommandPacket data) {
+    clients.firstWhere((c) => c.id == id, orElse: () => throw Exception("Client not found")).send(data);
   }
 
   /// Broadcasts a message to all clients or specific groups with error handling for individual client failures.

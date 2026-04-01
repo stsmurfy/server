@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:server/models/command_packet.dart';
+import 'package:uuid/uuid.dart';
 
 /// The Client class represents a connected WebSocket client.
 /// It encapsulates the WebSocket connection and provides methods for sending and closing the connection.
@@ -19,8 +20,19 @@ class Client {
   }) : _socket = socket;
 
   final WebSocket _socket;
+  final String id = Uuid().v4();
   String? group;
   bool isAuthorized = false;
+
+  /// Returns a map representation of the client's information.
+  /// The map includes the client's ID, group, and authorization status.
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "group": group,
+      "isAuthorized": isAuthorized,
+    };
+  }
 
   /// Send a command packet to the client.
   /// Handles JSON encoding and error logging internally.
